@@ -5,20 +5,15 @@
 
 std::atomic<unsigned int> counter;
 std::vector<InterruptibleThread> backgroundThreads;
-static unsigned int threadNum = 10;
+static unsigned int threadNum = 3;
+std::mutex procMutex;
 
 thread_local bool done = false;
-
-extern void interruption_point();
-
-void thread_interrupted()
-{
-    done = true;
-}
 
 void process_next_item()
 {
     counter++;
+    std::lock_guard<std::mutex> lock(procMutex);
     std::cout << "The thread with id: " << std::this_thread::get_id() << " has counter: " << counter << std::endl;
 }
 
@@ -44,6 +39,8 @@ int main()
 {
     start_background_processing();
 
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+
     for (size_t i = 0; i < threadNum; i++)
     {
         backgroundThreads[i].interrupt();
@@ -54,5 +51,7 @@ int main()
         backgroundThreads[i].join();
     }
 
-	return 0;
+    std::cin.get();
+
+    return 0;
 }
