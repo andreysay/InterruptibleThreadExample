@@ -4,12 +4,15 @@
 
 #include <atomic>
 #include <thread>
+#include <iostream>
+
+class interrupt_flag;
 
 class InterruptibleThread
 {
 public:
     template<typename FunctionType>
-    InterruptibleThread(FunctionType f) = default;
+    InterruptibleThread(FunctionType f);
     void join();
     void detach();
     bool joinable() const;

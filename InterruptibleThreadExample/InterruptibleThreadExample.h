@@ -4,5 +4,7 @@
 #pragma once
 
 #include <iostream>
+#include <vector>
+#include "InterruptibleThread.h"
 
 // TODO: Reference additional headers your program requires here.
