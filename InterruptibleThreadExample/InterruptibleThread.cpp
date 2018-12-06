@@ -5,7 +5,6 @@
 void InterruptibleThread::join()
 {
     internal_thread.join();
-    std::cout << "The thread has been joined!!!\n" << std::flush;
 }
 void InterruptibleThread::detach()
 {

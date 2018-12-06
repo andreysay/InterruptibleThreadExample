@@ -39,16 +39,14 @@ int main()
 {
     start_background_processing();
 
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
     for (size_t i = 0; i < threadNum; i++)
     {
         backgroundThreads[i].interrupt();
-    }
-
-    for (size_t i = 0; i < threadNum; i++)
-    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
         backgroundThreads[i].join();
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 
     std::cin.get();

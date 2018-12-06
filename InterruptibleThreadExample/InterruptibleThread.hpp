@@ -6,9 +6,17 @@
 #include <thread>
 #include <iostream>
 #include <stdexcept>
+#include <exception>
 #include <future>
 
 extern thread_local bool done;
+
+class thread_interrupted : public std::exception
+{
+public:
+    bool t_interrupted;
+    thread_interrupted() : t_interrupted{ true } {}
+};
 
 namespace {
     class interrupt_flag
@@ -36,8 +44,7 @@ namespace {
         if (this_thread_interrupt_flag.is_set())
         {
             std::cout << "The thread with id: " << std::this_thread::get_id() << " has been interrupted!!!\n" << std::flush;
-            throw std::runtime_error("Interrupt occur!!!\n");
-            done = true;
+            throw thread_interrupted();
         }
     }
 }
@@ -55,9 +62,9 @@ public:
             {
                 f();
             }
-            catch (std::exception const&)
+            catch (thread_interrupted const& e)
             {
-
+                done = e.t_interrupted;
             }
         });
         flag = p.get_future().get();
